@@ -4,13 +4,13 @@ import java.util.StringTokenizer;
 
 public class DOBuilder extends DatabaseObjectBuilder {
 
-	private String query;
+	private String[] query;
 	private DatabaseObject object;
 	public DOBuilder(){
 		
 	}
 	@Override
-	public DatabaseObjectBuilder setQuery(String query) {
+	public DatabaseObjectBuilder setQuery(String[] query) {
 		this.query = query;
 		return this;
 	}
@@ -23,22 +23,27 @@ public class DOBuilder extends DatabaseObjectBuilder {
 		if(query == null){
 			throw new IllegalStateException();
 		}
-		StringTokenizer tokenizer = new StringTokenizer(query, "&");
-		HashMap<String, String> map = new HashMap<String, String>();
+		String classname = query[2];
+		String params = query[3];
+		String paramValues = query[5];
+		HashMap<String, String> map = new HashMap<>();
+		StringBuilder paramNames = new StringBuilder();
+		paramNames.append(params).deleteCharAt(0).deleteCharAt(paramNames.length()-1);
+		params = paramNames.toString();
+		StringBuilder paramVal = new StringBuilder();
+		paramVal.append(paramValues).deleteCharAt(0).deleteCharAt(paramVal.length()-1);
+		paramValues = paramVal.toString();
+		StringTokenizer tokenizer = new StringTokenizer(params, ",");
+		StringTokenizer tokenizer2 = new StringTokenizer(paramValues, ",");
 		while(tokenizer.hasMoreTokens()){
-			String token = tokenizer.nextToken();
-			if(!token.contains("=")){
-				throw new IllegalArgumentException();
-			}
-			map.put(token.substring(0, token.indexOf("=")), token.substring(token.indexOf("=")+1));
+			map.put(tokenizer.nextToken(), tokenizer2.nextToken());
 		}
-		if(!map.containsKey("class")){
-			throw new IllegalArgumentException();
-		}
-		switch(map.get("class")){
-			//insert real class names here and finish this switch
+		switch(classname.toUpperCase()){
+		case "USER":
+		case "USERS": break;
 		}
 		return null;
+		
 	}
 	
 	@Override

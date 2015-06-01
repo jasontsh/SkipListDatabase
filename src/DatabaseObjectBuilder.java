@@ -1,7 +1,7 @@
 
 public abstract class DatabaseObjectBuilder {
 
-	public abstract DatabaseObjectBuilder setQuery(String query);
+	public abstract DatabaseObjectBuilder setQuery(String[] query);
 	
 	public abstract DatabaseObject build();
 	

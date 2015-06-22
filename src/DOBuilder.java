@@ -40,7 +40,7 @@ public class DOBuilder extends DatabaseObjectBuilder {
 		}
 		switch(classname.toUpperCase()){
 		case "USER":
-		case "USERS": break;
+		case "USERS": return new User(map);
 		}
 		return null;
 		

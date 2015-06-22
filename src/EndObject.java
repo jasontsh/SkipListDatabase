@@ -4,7 +4,6 @@ import java.util.List;
 
 public class EndObject extends TerminalObjects {
 
-	private String prev;
 	private String className;
 	private String savePath;
 	private List<String> list;
@@ -49,35 +48,26 @@ public class EndObject extends TerminalObjects {
 	}
 
 	@Override
-	public List<String> getList() {
+	public List<String> getPrevList() {
 		return list;
 	}
 
 	@Override
-	public void setList(List<String> list) {
+	public List<String> getNextList() {
+		//should never get next list from an end object
+		throw new UnsupportedOperationException();		
+	}
+
+	@Override
+	public void setPrevList(List<String> list) {
 		this.list = list;
 	}
 
 	@Override
-	public String getNext() {
-		return null;
+	public void setNextList(List<String> list) {
+		//should never call next list from an end object
+		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public String getPrev() {
-		return prev;
-	}
-
-	@Override
-	public void setNext(String next) {
-	}
-
-	@Override
-	public void setPrev(String prev) {
-		if(list.isEmpty()){
-			list.add(prev);
-		}
-		this.prev = prev;
-	}
 
 }

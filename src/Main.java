@@ -4,6 +4,7 @@ public class Main {
 
 	//Constants:
 	public static final String QUERY_ADD = "INSERT";
+	//Insert example: INSERT into User (c1,c2,c3) VALUES (v1,v2,v3); -> c1-v1, c2-v2, c3-v3
 	public static final String QUERY_SEARCH = "SELECT";
 	/**
 	 * If query from, given the path of the object from and the direction and interval, 
@@ -12,6 +13,7 @@ public class Main {
 	public static final String QUERY_FROM = "FROM";
 	
 	public static final String QUERY_INIT = "INIT";
+	//example: init user
 	
 	
 	

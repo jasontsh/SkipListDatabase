@@ -7,23 +7,11 @@ public class StartObject extends TerminalObjects {
 	private String className;
 	private String savePath;
 	private List<String> list;
-	private String next;
 	
 	public StartObject(String className){
 		savePath = className + "_start";
 		this.className = className;
 		list = new LinkedList<String>();
-	}
-	
-	
-	@Override
-	public List<String> getList(){
-		return list;
-	}
-	
-	@Override
-	public void setList(List<String> list){
-		this.list = list;
 	}
 	
 	@Override
@@ -61,27 +49,24 @@ public class StartObject extends TerminalObjects {
 	}
 
 	@Override
-	public String getNext() {
-		return next;
+	public List<String> getPrevList() {
+		//should never call prev list from an end object
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String getPrev() {
-		return null;
+	public List<String> getNextList() {
+		return list;
 	}
-
 
 	@Override
-	public void setNext(String next) {
-		if(list.isEmpty()){
-			list.add(next);
-		}
-		this.next = next;
+	public void setPrevList(List<String> list) {
+		//should never get prev list from start object
+		throw new UnsupportedOperationException();
 	}
-
 
 	@Override
-	public void setPrev(String prev) {
+	public void setNextList(List<String> list) {
+		this.list = list;
 	}
-	
 }

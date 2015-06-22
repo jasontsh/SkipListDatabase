@@ -8,11 +8,11 @@ import com.google.gson.Gson;
 public abstract class DatabaseObject {
 	
 	public void save(){
-		if(getSavePath() == null){
-			firstTimeSave();
-		}
 		try {
-			FileWriter writer = new FileWriter(getSavePath()+".txt");
+			if(getSavePath() == null){
+				firstTimeSave();
+			}
+			FileWriter writer = new FileWriter(getSavePath());
 			writer.write((new Gson()).toJson(this));
 			writer.close();
 		} catch (IOException e) {
@@ -20,11 +20,11 @@ public abstract class DatabaseObject {
 			e.printStackTrace();
 		}
 	}
-	
 	/**
-	 * This function finds the first time save path and set it
+	 * This function is called when getSavePath returns null
+	 * @throws IOException 
 	 */
-	public abstract void firstTimeSave();
+	public abstract void firstTimeSave() throws IOException;
 	
 	public abstract String getSavePath();
 	
@@ -32,19 +32,20 @@ public abstract class DatabaseObject {
 
 	public abstract int compareTo(DatabaseObject other, String fieldName);
 	
-	public abstract List<String> getList();
-
-	public abstract void setList(List<String> list);
+	/*
+	 * The list contains the first prev as the 0 layer. This is to get the previous 
+	 * objects from different layer.
+	 */
+	public abstract List<String> getPrevList();
+	
+	public abstract List<String> getNextList();
+	
+	public abstract void setPrevList(List<String> list);
+	
+	public abstract void setNextList(List<String> list);
 	
 	public abstract String getClassName();
 	
 	public abstract void setClassName(String name);
 	
-	public abstract String getNext();
-	
-	public abstract String getPrev();
-	
-	public abstract void setNext(String next);
-	
-	public abstract void setPrev(String prev);
 }

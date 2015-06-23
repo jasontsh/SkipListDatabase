@@ -9,7 +9,7 @@ public class StartObject extends TerminalObjects {
 	private List<String> list;
 	
 	public StartObject(String className){
-		savePath = className + "_start";
+		savePath = className + "_start.txt";
 		this.className = className;
 		list = new LinkedList<String>();
 	}

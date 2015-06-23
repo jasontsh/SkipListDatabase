@@ -35,6 +35,10 @@ public class Main {
 		end.save();
 	}
 	
+	/**
+	 * This method adds the object by parsing it with query
+	 * @param query
+	 */
 	public static void add(String[] query){
 		DatabaseObjectBuilder builder = new DOBuilder();
 		builder.setQuery(query).build().save();

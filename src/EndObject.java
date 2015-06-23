@@ -9,7 +9,7 @@ public class EndObject extends TerminalObjects {
 	private List<String> list;
 	
 	public EndObject(String className){
-		savePath = className + "_end";
+		savePath = className + "_end.txt";
 		this.className = className;
 		list = new LinkedList<String>();
 	}

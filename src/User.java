@@ -4,10 +4,12 @@ import java.io.InputStreamReader;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
+import java.util.Set;
 
 import com.google.gson.Gson;
 
@@ -55,9 +57,10 @@ public class User extends DatabaseObject {
 		while(endlock == null){
 			try {
 				endStream = new FileInputStream("user_end.txt");
-				endlock = endStream.getChannel().lock();
+				endlock = endStream.getChannel().tryLock(0L, Long.MAX_VALUE, true);
 			} catch(OverlappingFileLockException e){
 				try {
+					System.out.println("lol");
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
@@ -72,14 +75,16 @@ public class User extends DatabaseObject {
 		if(endlist.isEmpty()){
 			//this is the case where this is the first object.
 			savePath = "user_1.txt";
+			id_number = 1;
 			FileLock firstlock = null;
 			FileInputStream firstStream = null;
 			while(firstlock == null){
 				try {
 					firstStream = new FileInputStream("user_start.txt");
-					firstlock = endStream.getChannel().lock();
+					firstlock = firstStream.getChannel().tryLock(0L, Long.MAX_VALUE, true);
 				} catch(OverlappingFileLockException e){
 					try {
+						System.out.println("lol2");
 						Thread.sleep(100);
 					} catch (InterruptedException e1) {
 						e1.printStackTrace();
@@ -104,9 +109,10 @@ public class User extends DatabaseObject {
 		while(lastlock == null){
 			try {
 				lastStream = new FileInputStream(endlist.get(0));
-				lastlock = endStream.getChannel().lock();
+				lastlock = lastStream.getChannel().tryLock(0L, Long.MAX_VALUE, true);
 			} catch(OverlappingFileLockException e){
 				try {
+					System.out.println("lol3");
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
@@ -118,27 +124,74 @@ public class User extends DatabaseObject {
 		InputStreamReader lastReader = new InputStreamReader(lastStream);
 		User lastUser = gson.fromJson(lastReader, User.class);
 		int lastid = lastUser.getId();			
-		savePath = "user_" + (lastid+1);
+		savePath = "user_" + (lastid+1) + ".txt";
+		id_number = lastid+1;
 		ListIterator<String> lastIterator = lastUser.getNextList().listIterator();
-		while(lastIterator.nextIndex() < prevList.size() && lastIterator.hasNext()){
+		while(lastIterator.nextIndex() < nextList.size() && lastIterator.hasNext()){
 			lastIterator.next();
 			lastIterator.set(savePath);
 			prevList.add(endlist.get(0));
 		}
 //		now we need to loop through all the prevs.
 		ListIterator<String> endIterator = endlist.listIterator(prevList.size());
-		
-		for(int i = prevList.size(); i < nextList.size(); i++){
-			//to be continued here
-			if(endlist.size() == i){
-				endlist.add(savePath);
+		Set<FileLock> fileLocks = new HashSet<FileLock>();
+		Set<User> users = new HashSet<User>();
+		while(endIterator.hasNext() && endIterator.nextIndex() < nextList.size()){
+			//if the file is locked already and editted
+			
+			if(endIterator.hasPrevious()){
+				String prev = endIterator.previous();
+				endIterator.next();
+				String next = endIterator.next();
+				if(prev.equals(next)){
+					continue;	
+				}else{
+					endIterator.previous();
+				}
 			}
-			if(endlist.get(i).equals(savePath)){
-				continue;
+			String nextp = endIterator.next();
+			FileLock nextl = null;
+			FileInputStream nexts = null;
+			while(nextl == null){
+				try {
+					nexts = new FileInputStream(nextp);
+					nextl = nexts.getChannel().tryLock(0L, Long.MAX_VALUE, true);
+				} catch(OverlappingFileLockException e){
+					try {
+						System.out.println("lol4");
+						Thread.sleep(100);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+			InputStreamReader nextr = new InputStreamReader(nexts);
+			User next = gson.fromJson(nextr, User.class);
+			ListIterator<String> nextIt = next.getNextList().listIterator(prevList.size()-1);
+			while(nextIt.hasNext() && nextIt.next().equals("user_end.txt")){
+				nextIt.set(savePath);
+				prevList.add(next.getSavePath());
+			}
+			users.add(next);
+			fileLocks.add(nextl);
+		}
+		//here we change all the paths of end to savePath
+		endIterator = endlist.listIterator();
+		while(endIterator.nextIndex() < nextList.size()){
+			if(endIterator.hasNext()){
+				endIterator.next();
+				endIterator.set(savePath);
+			}else{
+				endIterator.add(savePath);
+				endIterator.next();
 			}
 		}
-		for(int i = 0; i < prevList.size(); i++){
-			end.getPrevList().add(savePath);
+		//now release and save everything (but releases end at the last)
+		for(FileLock fl: fileLocks){
+			fl.release();
+		}
+		for(User u: users){
+			u.save();
 		}
 		endlock.release();
 		end.save();

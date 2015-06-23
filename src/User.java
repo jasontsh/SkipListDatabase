@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 
 /*
  * To initiate this class, the command is "INSERT INTO USER (username,password) VALUES (u,p)"
- * Save path: user_idnumber
+ * Save path: user_idnumber.txt
  */
 public class User extends DatabaseObject {
 

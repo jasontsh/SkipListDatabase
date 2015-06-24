@@ -137,7 +137,7 @@ public class User extends DatabaseObject {
 		Set<FileLock> fileLocks = new HashSet<FileLock>();
 		Set<User> users = new HashSet<User>();
 		while(endIterator.hasNext() && endIterator.nextIndex() < nextList.size()){
-			//if the file is locked already and editted
+			//if the file is locked already and edited
 			
 			if(endIterator.hasPrevious()){
 				String prev = endIterator.previous();
@@ -175,6 +175,8 @@ public class User extends DatabaseObject {
 			users.add(next);
 			fileLocks.add(nextl);
 		}
+		//we need to ALSO CHANGE THE USER_START!
+		
 		//here we change all the paths of end to savePath
 		endIterator = endlist.listIterator();
 		while(endIterator.nextIndex() < nextList.size()){
@@ -183,7 +185,6 @@ public class User extends DatabaseObject {
 				endIterator.set(savePath);
 			}else{
 				endIterator.add(savePath);
-				endIterator.next();
 			}
 		}
 		//now release and save everything (but releases end at the last)
@@ -193,6 +194,8 @@ public class User extends DatabaseObject {
 		for(User u: users){
 			u.save();
 		}
+		lastlock.release();
+		lastUser.save();
 		endlock.release();
 		end.save();
 	}

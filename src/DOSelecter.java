@@ -1,3 +1,12 @@
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.List;
+import java.util.ListIterator;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+
 
 public class DOSelecter extends DatabaseSelecter {
 	String classname;
@@ -6,7 +15,9 @@ public class DOSelecter extends DatabaseSelecter {
 
 	@Override
 	public DatabaseSelecter setQuery(String[] query) {
-		return null;
+		classname = query[3];
+		key = query[1];
+		return this;
 	}
 
 	@Override
@@ -20,14 +31,41 @@ public class DOSelecter extends DatabaseSelecter {
 		if(obj != null){
 			return obj;
 		}
-		switch(classname.toUpperCase()){
-		case "USER": return selectUser(Integer.parseInt(key));
+		try{
+			switch(classname.toUpperCase()){
+			case "USER": return selectUser(Integer.parseInt(key));
+			}
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public DatabaseObject selectUser(int id){
-		return null;
+	public DatabaseObject selectUser(int id) throws FileNotFoundException{
+		Gson gson = new Gson();
+		StartObject start = gson.fromJson(new FileReader("user_start.txt"), StartObject.class);
+		List<String> nexts = start.getNextList();
+		ListIterator<String> nextsIt = nexts.listIterator(nexts.size());
+		int buffid = Integer.MAX_VALUE;
+		User nextUser = null;
+		while (nextsIt.hasPrevious() && id <= buffid){
+			nextUser = gson.fromJson(new FileReader(nextsIt.previous()), User.class);
+			buffid = nextUser.getId();
+		}
+		if(nextUser == null){
+			return null;
+		}
+		while(nextUser.getId() >= id){
+			nextsIt = nextUser.getNextList().listIterator(nextUser.getNextList().size());
+			while (nextsIt.hasPrevious() && id <= buffid){
+				nextUser = gson.fromJson(new FileReader(nextsIt.previous()), User.class);
+				buffid = nextUser.getId();
+			}		
+		}
+		if(nextUser.getId() > id){
+			return null;
+		}
+		return nextUser;
 	}
 
 }

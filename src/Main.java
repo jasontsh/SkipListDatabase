@@ -13,7 +13,7 @@ public class Main {
 	 * return that k entries (not including itself)
 	 */
 	public static final String QUERY_FROM = "FROM";
-	
+	//from user_2.txt up 5 --> user_3, user_4, user_5, user_6, user_7
 	public static final String QUERY_INIT = "INIT";
 	//example: init user
 	

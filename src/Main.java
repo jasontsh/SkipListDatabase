@@ -49,6 +49,10 @@ public class Main {
 	public static void select(String[] query){
 		DatabaseSelecter selecter = new DOSelecter();
 		DatabaseObject obj = selecter.setQuery(query).select();
-		System.out.println((new Gson()).toJson(obj));
+		if(obj == null){
+			System.out.println("");
+		}else{
+			System.out.println((new Gson()).toJson(obj));
+		}
 	}
 }

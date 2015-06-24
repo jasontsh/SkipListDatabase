@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
 
 
 public class DOSelecter extends DatabaseSelecter {
@@ -76,6 +74,7 @@ public class DOSelecter extends DatabaseSelecter {
 		if(nextUser.getId() > id){
 			return null;
 		}
+		obj = nextUser;
 		return nextUser;
 	}
 

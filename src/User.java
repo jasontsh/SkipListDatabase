@@ -189,7 +189,7 @@ public class User extends DatabaseObject {
 		InputStreamReader startr = new InputStreamReader(starts);
 		StartObject start = gson.fromJson(startr, StartObject.class);
 		while(start.getNextList().size() < nextList.size()){
-			start.getNextList().add(savePath);
+			start.addLayer(this);
 		}
 		//also need to make sure that prev and next has the same length
 		while(prevList.size() < nextList.size()){

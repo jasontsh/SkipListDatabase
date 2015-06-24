@@ -49,16 +49,27 @@ public class DOSelecter extends DatabaseSelecter {
 		int buffid = Integer.MAX_VALUE;
 		User nextUser = null;
 		while (nextsIt.hasPrevious() && id <= buffid){
-			nextUser = gson.fromJson(new FileReader(nextsIt.previous()), User.class);
+			String next = nextsIt.previous();
+			if(next.equals("user_end.txt")){
+				buffid = Integer.MAX_VALUE;
+				continue;
+			}
+			nextUser = gson.fromJson(new FileReader(next), User.class);
 			buffid = nextUser.getId();
 		}
 		if(nextUser == null){
 			return null;
 		}
-		while(nextUser.getId() >= id){
+		while(nextUser.getId() < id){
 			nextsIt = nextUser.getNextList().listIterator(nextUser.getNextList().size());
+			buffid = Integer.MAX_VALUE;
 			while (nextsIt.hasPrevious() && id <= buffid){
-				nextUser = gson.fromJson(new FileReader(nextsIt.previous()), User.class);
+				String next = nextsIt.previous();
+				if(next.equals("user_end.txt")){
+					buffid = Integer.MAX_VALUE;
+					continue;
+				}
+				nextUser = gson.fromJson(new FileReader(next), User.class);
 				buffid = nextUser.getId();
 			}		
 		}

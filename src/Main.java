@@ -50,7 +50,7 @@ public class Main {
 		DatabaseSelecter selecter = new DOSelecter();
 		DatabaseObject obj = selecter.setQuery(query).select();
 		if(obj == null){
-			System.out.println("");
+			System.out.println("{}");
 		}else{
 			System.out.println((new Gson()).toJson(obj));
 		}

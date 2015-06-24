@@ -60,7 +60,6 @@ public class User extends DatabaseObject {
 				endlock = endStream.getChannel().tryLock(0L, Long.MAX_VALUE, true);
 			} catch(OverlappingFileLockException e){
 				try {
-					System.out.println("lol");
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
@@ -84,7 +83,6 @@ public class User extends DatabaseObject {
 					firstlock = firstStream.getChannel().tryLock(0L, Long.MAX_VALUE, true);
 				} catch(OverlappingFileLockException e){
 					try {
-						System.out.println("lol2");
 						Thread.sleep(100);
 					} catch (InterruptedException e1) {
 						e1.printStackTrace();
@@ -112,7 +110,6 @@ public class User extends DatabaseObject {
 				lastlock = lastStream.getChannel().tryLock(0L, Long.MAX_VALUE, true);
 			} catch(OverlappingFileLockException e){
 				try {
-					System.out.println("lol3");
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
@@ -158,7 +155,6 @@ public class User extends DatabaseObject {
 					nextl = nexts.getChannel().tryLock(0L, Long.MAX_VALUE, true);
 				} catch(OverlappingFileLockException e){
 					try {
-						System.out.println("lol4");
 						Thread.sleep(100);
 					} catch (InterruptedException e1) {
 						e1.printStackTrace();
@@ -176,7 +172,29 @@ public class User extends DatabaseObject {
 			fileLocks.add(nextl);
 		}
 		//we need to ALSO CHANGE THE USER_START!
-		
+		FileLock startl = null;
+		FileInputStream starts = null;
+		while(startl == null){
+			try {
+				starts = new FileInputStream("user_start.txt");
+				startl = starts.getChannel().tryLock(0L, Long.MAX_VALUE, true);
+			} catch(OverlappingFileLockException e){
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		InputStreamReader startr = new InputStreamReader(starts);
+		StartObject start = gson.fromJson(startr, StartObject.class);
+		while(start.getNextList().size() < nextList.size()){
+			start.getNextList().add(savePath);
+		}
+		//also need to make sure that prev and next has the same length
+		while(prevList.size() < nextList.size()){
+			prevList.add("user_start.txt");
+		}
 		//here we change all the paths of end to savePath
 		endIterator = endlist.listIterator();
 		while(endIterator.nextIndex() < nextList.size()){
@@ -194,6 +212,8 @@ public class User extends DatabaseObject {
 		for(User u: users){
 			u.save();
 		}
+		startl.release();
+		start.save();
 		lastlock.release();
 		lastUser.save();
 		endlock.release();

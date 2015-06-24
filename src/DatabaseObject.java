@@ -4,6 +4,12 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
+/**
+ * 
+ * Abstract class for DatabaseObjects
+ * Subclasses: TerminalObject.java, User.java
+ *
+ */
 
 public abstract class DatabaseObject {
 	

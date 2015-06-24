@@ -3,7 +3,7 @@ import com.google.gson.Gson;
 
 
 public class Main {
-
+	
 	//Constants:
 	public static final String QUERY_ADD = "INSERT";
 	//Insert example: INSERT into User (c1,c2,c3) VALUES (v1,v2,v3); -> c1-v1, c2-v2, c3-v3
@@ -18,7 +18,10 @@ public class Main {
 	//example: init user
 	
 	
-	
+	/**
+	 * main function to match query
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		String keyword = args[0];
 		switch (keyword.toUpperCase()){
@@ -29,6 +32,10 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * This method initializes the database with the class name given
+	 * @param query
+	 */
 	public static void init(String[] query){
 		String classname = query[1];
 		StartObject start = new StartObject(classname);
@@ -46,6 +53,11 @@ public class Main {
 		builder.setQuery(query).build().save();
 	}
 
+	/**
+	 * This method prints the Json for the requested object. If there
+	 * are no objects, it prints the empty string
+	 * @param query
+	 */
 	public static void select(String[] query){
 		DatabaseSelecter selecter = new DOSelecter();
 		DatabaseObject obj = selecter.setQuery(query).select();

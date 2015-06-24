@@ -183,7 +183,6 @@ public class User extends DatabaseObject {
 				endIterator.set(savePath);
 			}else{
 				endIterator.add(savePath);
-				endIterator.next();
 			}
 		}
 		//now release and save everything (but releases end at the last)

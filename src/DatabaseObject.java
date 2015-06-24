@@ -14,6 +14,7 @@ public abstract class DatabaseObject {
 			}
 			FileWriter writer = new FileWriter(getSavePath());
 			writer.write((new Gson()).toJson(this));
+			writer.flush();
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -1,3 +1,17 @@
+import com.google.gson.Gson;
+
+import com.google.gson.Gson;
+
+import com.google.gson.Gson;
+
+import com.google.gson.Gson;
+
+import com.google.gson.Gson;
+
+import com.google.gson.Gson;
+
+import com.google.gson.Gson;
+
 
 
 public class Main {
@@ -21,7 +35,7 @@ public class Main {
 		String keyword = args[0];
 		switch (keyword.toUpperCase()){
 		case QUERY_ADD: add(args); break;
-		case QUERY_SEARCH: break;
+		case QUERY_SEARCH: select(args); break;
 		case QUERY_FROM: break;
 		case QUERY_INIT: init(args); break;
 		}
@@ -44,4 +58,9 @@ public class Main {
 		builder.setQuery(query).build().save();
 	}
 
+	public static void select(String[] query){
+		DatabaseSelecter selecter = new DOSelecter();
+		DatabaseObject obj = selecter.setQuery(query).select();
+		System.out.println((new Gson()).toJson(obj));
+	}
 }

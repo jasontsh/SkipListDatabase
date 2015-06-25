@@ -235,7 +235,7 @@ public class User extends DatabaseObject {
 		if(other instanceof TerminalObjects){
 			return 0 - other.compareTo(this, fieldName);
 		}
-		return 0;
+		return id_number - ((User)other).getId();
 	}
 
 

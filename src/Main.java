@@ -1,9 +1,4 @@
 import com.google.gson.Gson;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
-
 
 
 public class Main {
@@ -57,23 +52,16 @@ public class Main {
 		builder.setQuery(query).build().save();
 	}
 
-<<<<<<< HEAD
 	/**
 	 * This method prints the Json for the requested object. If there
 	 * are no objects, it prints the empty string
 	 * @param query
 	 */
-=======
->>>>>>> origin/master
 	public static void select(String[] query){
 		DatabaseSelecter selecter = new DOSelecter();
 		DatabaseObject obj = selecter.setQuery(query).select();
 		if(obj == null){
-<<<<<<< HEAD
-			System.out.println("");
-=======
 			System.out.println("{}");
->>>>>>> origin/master
 		}else{
 			System.out.println((new Gson()).toJson(obj));
 		}

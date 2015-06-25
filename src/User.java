@@ -39,18 +39,7 @@ public class User extends DatabaseObject {
 		//need to find path, next and prev and id, as with changing other files
 		Gson gson = new Gson();
 		//we also need to find how many layers this user has:
-		Random random = new Random();
-		if(!prevList.isEmpty() || !nextList.isEmpty()){
-			//the list should be empty, or else it shouldn't be in first time save.
-			throw new IllegalStateException();
-		}
-		//add null as a buffer
-		prevList.add("user_start.txt");
-		nextList.add("user_end.txt");
-		while(random.nextBoolean()){
-			prevList.add("user_start.txt");
-			nextList.add("user_end.txt");
-		}
+		setRandomLayers();
 		//lock end file:
 		FileLock endlock = null;
 		FileInputStream endStream = null;
@@ -163,7 +152,7 @@ public class User extends DatabaseObject {
 			}
 			InputStreamReader nextr = new InputStreamReader(nexts);
 			User next = gson.fromJson(nextr, User.class);
-			ListIterator<String> nextIt = next.getNextList().listIterator(prevList.size()-1);
+			ListIterator<String> nextIt = next.getNextList().listIterator(prevList.size());
 			while(nextIt.hasNext() && nextIt.next().equals("user_end.txt")){
 				nextIt.set(savePath);
 				prevList.add(next.getSavePath());
@@ -241,7 +230,7 @@ public class User extends DatabaseObject {
 
 	@Override
 	public String getClassName() {
-		return "USER";
+		return "user";
 	}
 
 	@Override

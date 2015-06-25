@@ -1,6 +1,7 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 import com.google.gson.Gson;
 
@@ -54,5 +55,26 @@ public abstract class DatabaseObject {
 	public abstract String getClassName();
 	
 	public abstract void setClassName(String name);
+	
+	/**
+	 * This function set the lists to be of the same size, with start and end terminal objects.
+	 */
+	public void setRandomLayers(){
+		if(!(getNextList().isEmpty() && getPrevList().isEmpty())){
+			throw new IllegalStateException();
+		}
+		Random random = new Random();
+		String classname = getClassName();
+		String start = classname + "_start.txt";
+		String end = classname + "_end.txt";
+		List<String> nextList = getNextList();
+		List<String> prevList = getPrevList();
+		prevList.add(start);
+		nextList.add(end);
+		while(random.nextBoolean()){
+			prevList.add(start);
+			nextList.add(end);
+		}
+	}
 	
 }

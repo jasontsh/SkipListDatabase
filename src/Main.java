@@ -1,4 +1,8 @@
 import com.google.gson.Gson;
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 
 
 
@@ -13,7 +17,7 @@ public class Main {
 	 * return that k entries (not including itself)
 	 */
 	public static final String QUERY_FROM = "FROM";
-	
+	//from user_2.txt up 5 --> user_3, user_4, user_5, user_6, user_7
 	public static final String QUERY_INIT = "INIT";
 	//example: init user
 	
@@ -53,16 +57,23 @@ public class Main {
 		builder.setQuery(query).build().save();
 	}
 
+<<<<<<< HEAD
 	/**
 	 * This method prints the Json for the requested object. If there
 	 * are no objects, it prints the empty string
 	 * @param query
 	 */
+=======
+>>>>>>> origin/master
 	public static void select(String[] query){
 		DatabaseSelecter selecter = new DOSelecter();
 		DatabaseObject obj = selecter.setQuery(query).select();
 		if(obj == null){
+<<<<<<< HEAD
 			System.out.println("");
+=======
+			System.out.println("{}");
+>>>>>>> origin/master
 		}else{
 			System.out.println((new Gson()).toJson(obj));
 		}

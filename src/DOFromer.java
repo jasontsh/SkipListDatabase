@@ -1,66 +1,80 @@
-
 import java.io.FileNotFoundException;
-
 import java.io.FileReader;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.google.gson.Gson;
 
+
+
 /**
  * 
- * This creates an object with the ability to select and return the gson for a
- * specified DatabaseObject
+ * @author markliammurphy
  *
  */
-
-public class DOSelecter extends DatabaseSelecter {
+public class DOFromer extends DatabaseFromer {
 	String classname;
 	String key;
-	DatabaseObject obj;
-
+	Set<DatabaseObject> obj;
+	String num;
+	String dir;
+	
 	@Override
-	public DatabaseSelecter setQuery(String[] query) {
-
-		classname = query[3];
+	public DatabaseFromer setQuery(String[] query) {
+		
+		classname = query[5];
 		key = query[1];
+		num = query[3];
+		dir = query[2];
+		
 		return this;
 	}
-
 	
-	/**
-	 * Resets the state of the local DatabaseObject
-	 */
 	@Override
 	public void reset() {
 		classname = null;
+		key = null;
 		obj = null;
+		num = null;
+		dir = null;
 	}
-
-	/**
-	 * Returns the object variable contained within the selecter
-	 */
-	@Override
-	public DatabaseObject select() {
-		if(obj != null){
-			return obj;
-		}
-		try{
-			switch(classname.toUpperCase()){
-			case "USER": return selectUser(Integer.parseInt(key));
+	
+	public Set<DatabaseObject> select() {
+		if (obj != null) return obj;
+		try {
+			switch(classname.toUpperCase()) {
+			case "USER": return selectUsers(Integer.parseInt(key),
+					Integer.parseInt(num), dir, new HashSet<DatabaseObject>());
 			}
-		}catch(FileNotFoundException e){
+		} catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	/**
-	 * 
-	 * @param id
-	 * @return the next user
-	 * @throws FileNotFoundException
-	 */
+	public Set<DatabaseObject> selectUsers(int id, 
+			int range, String direction, Set<DatabaseObject> userSet) throws FileNotFoundException {
+		
+		userSet.add(selectUser(id));
+		
+		switch(direction.toUpperCase()) {
+		case "UP":
+			if (range != 0) {selectUsers(id+1, range-1, direction, userSet);}
+			else {return userSet;}
+			break;
+		case "DOWN":
+			if (range !=0) {selectUsers(id-1, range-1, direction, userSet);}
+			else {return userSet;}
+			break;
+		}
+
+		obj = userSet;
+		return userSet;
+	}
+
 	public DatabaseObject selectUser(int id) throws FileNotFoundException{
 		Gson gson = new Gson();
 		StartObject start = gson.fromJson(new FileReader("user_start.txt"), StartObject.class);
@@ -96,8 +110,6 @@ public class DOSelecter extends DatabaseSelecter {
 		if(nextUser.getId() > id){
 			return null;
 		}
-		obj = nextUser;
 		return nextUser;
 	}
-
 }

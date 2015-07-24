@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 /**
- * 
+ * DOBuilder is initiated with the add function (INSERT query)
  * 
  *
  */
@@ -20,6 +20,10 @@ public class DOBuilder extends DatabaseObjectBuilder {
 		return this;
 	}
 
+	/**
+	 * This function parses the query and returns a database object
+	 *
+	 */
 	@Override
 	public DatabaseObject build() {
 		if(object != null){

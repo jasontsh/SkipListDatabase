@@ -1,13 +1,17 @@
 import java.util.LinkedList;
 import java.util.List;
 
-
+/**
+ * DatabaseObject that points to the first user in each list layer
+ * 
+ */
 public class StartObject extends TerminalObjects {
 
 	private String className;
 	private String savePath;
 	private List<String> list;
 	
+	//Constructor
 	public StartObject(String className){
 		savePath = className + "_start.txt";
 		this.className = className;

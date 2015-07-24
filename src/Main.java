@@ -1,3 +1,5 @@
+import java.util.Set;
+
 import com.google.gson.Gson;
 
 
@@ -26,7 +28,7 @@ public class Main {
 		switch (keyword.toUpperCase()){
 		case QUERY_ADD: add(args); break;
 		case QUERY_SEARCH: select(args); break;
-		case QUERY_FROM: break;
+		case QUERY_FROM: from(args); break;
 		case QUERY_INIT: init(args); break;
 		}
 	}
@@ -64,6 +66,19 @@ public class Main {
 			System.out.println("{}");
 		}else{
 			System.out.println((new Gson()).toJson(obj));
+		}
+	}
+	
+	public static void from(String[] query) {
+		DatabaseFromer fromer = new DOFromer();
+		Set<DatabaseObject> objSet = fromer.setQuery(query).select();
+		if (objSet.size() == 0) {
+			System.out.println("{}");
+		} else {
+			Object[] o = objSet.toArray();
+			for(int i = 0; i < o.length; i++) {
+				System.out.println((new Gson()).toJson(o[i]));
+			}
 		}
 	}
 }

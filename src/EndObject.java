@@ -1,7 +1,10 @@
 import java.util.LinkedList;
 import java.util.List;
 
-
+/**
+ * DatabaseObject that points to the last user in each list layer
+ *
+ */
 public class EndObject extends TerminalObjects {
 
 	private String className;
